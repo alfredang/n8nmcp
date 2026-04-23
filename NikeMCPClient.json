@@ -5,7 +5,7 @@
       "parameters": {
         "httpMethod": "POST",
         "path": "45a57c13-d591-42a0-9adf-3bb27eb3d6fc",
-        "responseMode": "lastNode",
+        "responseMode": "responseNode",
         "options": {
           "allowedOrigins": "*",
           "responseHeaders": {
@@ -55,6 +55,21 @@
     },
     {
       "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1112,
+        320
+      ],
+      "id": "a1b2c3d4-respond-node-001",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
         "endpointUrl": "https://n8n.srv923061.hstgr.cloud/mcp/67712673-9552-4041-a8e2-32ed2f38e11a",
         "options": {}
       },
@@ -100,6 +115,17 @@
         [
           {
             "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
             "type": "main",
             "index": 0
           }
