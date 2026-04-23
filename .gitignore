@@ -1,0 +1,4 @@
+.playwright-mcp/
+social-media-tool*.png
+node_modules/
+.DS_Store

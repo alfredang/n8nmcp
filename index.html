@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nike China KOL Discovery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #0a0a0f;
+      color: #e8e8ed;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Header with Nike branding */
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .nike-swoosh {
+      width: 64px;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #ff6b35, #ff8c42, #ff6b35);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    header p {
+      color: #8888a0;
+      font-size: 0.95rem;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* Pipeline indicator */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+      font-size: 0.75rem;
+      color: #555568;
+      flex-wrap: wrap;
+    }
+
+    .pipeline-step {
+      background: #1a1a24;
+      border: 1px solid #2a2a3a;
+      border-radius: 6px;
+      padding: 4px 10px;
+      white-space: nowrap;
+    }
+
+    .pipeline-step.active {
+      border-color: #ff6b35;
+      color: #ff8c42;
+    }
+
+    .pipeline-arrow {
+      color: #333;
+    }
+
+    /* Cards */
+    .card {
+      background: #14141e;
+      border: 1px solid #2a2a3a;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #ff8c42;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-title .icon {
+      font-size: 1rem;
+    }
+
+    /* Form elements */
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #b0b0c0;
+      margin-bottom: 0.5rem;
+    }
+
+    label .hint {
+      color: #555568;
+      font-weight: 400;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      background: #0e0e16;
+      border: 1px solid #2a2a3a;
+      border-radius: 8px;
+      color: #e8e8ed;
+      font-family: inherit;
+      font-size: 0.95rem;
+      padding: 12px 14px;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: #ff6b35;
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238888a0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .form-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #ff6b35, #e85d26);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 52px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Output section */
+    .output-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .output-header .card-title {
+      margin-bottom: 0;
+    }
+
+    .btn-copy {
+      background: transparent;
+      border: 1px solid #2a2a3a;
+      border-radius: 6px;
+      color: #8888a0;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-copy:hover {
+      color: #e8e8ed;
+      border-color: #ff6b35;
+    }
+
+    .btn-copy.copied {
+      color: #00c853;
+      border-color: #00c853;
+    }
+
+    .output-area {
+      background: #0e0e16;
+      border: 1px solid #2a2a3a;
+      border-radius: 8px;
+      padding: 20px;
+      min-height: 200px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: #c8c8d8;
+    }
+
+    .output-area.error {
+      color: #ff5252;
+      border-color: #ff525240;
+      min-height: auto;
+    }
+
+    .output-area.fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .output-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: #555568;
+    }
+
+    /* Loading state */
+    .loading-container {
+      text-align: center;
+      padding: 2.5rem 1rem;
+    }
+
+    .loading-container .spinner {
+      margin: 0 auto 1.25rem;
+      width: 32px;
+      height: 32px;
+      border-width: 3px;
+      border-color: rgba(255, 107, 53, 0.2);
+      border-top-color: #ff6b35;
+    }
+
+    .loading-container .loading-title {
+      color: #e8e8ed;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .loading-container .loading-subtitle {
+      color: #8888a0;
+      font-size: 0.85rem;
+    }
+
+    .loading-steps {
+      margin-top: 1.25rem;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: left;
+    }
+
+    .loading-step {
+      font-size: 0.8rem;
+      color: #555568;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .loading-step.active {
+      color: #ff8c42;
+    }
+
+    .loading-step .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #333;
+      flex-shrink: 0;
+    }
+
+    .loading-step.active .dot {
+      background: #ff6b35;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* Panels */
+    .output-panel {
+      display: none;
+    }
+
+    .output-panel.visible {
+      display: block;
+    }
+
+    .shortcut-hint {
+      text-align: center;
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+      color: #444;
+    }
+
+    .shortcut-hint kbd {
+      background: #1e1e2a;
+      border: 1px solid #2a2a3a;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: inherit;
+      font-size: 0.7rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      body {
+        padding: 1rem 0.75rem;
+      }
+
+      header h1 {
+        font-size: 1.35rem;
+      }
+
+      .card {
+        padding: 1.25rem;
+      }
+
+      .form-row,
+      .form-row-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .pipeline {
+        font-size: 0.65rem;
+      }
+
+      .btn-primary {
+        min-height: 52px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <svg class="nike-swoosh" viewBox="0 0 69 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M68.56 0.95L20.25 22.72C15.65 24.78 11.48 25.72 7.91 25.72C3.45 25.72 0 24.05 0 20.55C0 17.82 1.82 14.49 5.74 11.15L3.82 12.49C1.39 14.85 0.14 17.03 0.14 18.95C0.14 23.15 4.49 25.19 10.0 23.26C12.62 22.35 15.46 20.71 18.42 18.71L68.56 0.95Z" fill="#ff6b35"/>
+      </svg>
+      <h1>China KOL Discovery</h1>
+      <p>Find and analyze Key Opinion Leaders and influencers in China for Nike marketing campaigns</p>
+    </header>
+
+    <div class="pipeline">
+      <span class="pipeline-step" id="step1">Web Tool</span>
+      <span class="pipeline-arrow">&rarr;</span>
+      <span class="pipeline-step" id="step2">AI Agent</span>
+      <span class="pipeline-arrow">&rarr;</span>
+      <span class="pipeline-step" id="step3">MCP Client</span>
+      <span class="pipeline-arrow">&rarr;</span>
+      <span class="pipeline-step" id="step4">Apify + Firecrawl</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">KOL Search Criteria</div>
+
+      <div class="form-group">
+        <label for="kolQuery">KOL Name or Category</label>
+        <input type="text" id="kolQuery" placeholder="e.g., basketball influencer, fitness trainer, Li Ning competitor, streetwear fashion...">
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label for="platform">China Platform</label>
+          <select id="platform">
+            <option value="Xiaohongshu (RED)">Xiaohongshu (RED)</option>
+            <option value="Douyin (TikTok China)">Douyin (TikTok China)</option>
+            <option value="Weibo">Weibo</option>
+            <option value="WeChat">WeChat</option>
+            <option value="Bilibili">Bilibili</option>
+            <option value="Kuaishou">Kuaishou</option>
+            <option value="All Platforms">All Platforms</option>
+          </select>
+        </div>
+        <div>
+          <label for="category">Nike Category</label>
+          <select id="category">
+            <option value="Running">Running</option>
+            <option value="Basketball">Basketball</option>
+            <option value="Training & Fitness">Training & Fitness</option>
+            <option value="Streetwear & Lifestyle">Streetwear & Lifestyle</option>
+            <option value="Soccer/Football">Soccer / Football</option>
+            <option value="Skateboarding">Skateboarding</option>
+            <option value="Sneaker Culture">Sneaker Culture</option>
+            <option value="Women's Fitness">Women's Fitness</option>
+            <option value="Youth & Gen-Z">Youth & Gen-Z</option>
+            <option value="Any Category">Any Category</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row-3">
+        <div>
+          <label for="followerRange">Follower Range</label>
+          <select id="followerRange">
+            <option value="Any">Any</option>
+            <option value="Nano (1K-10K)">Nano (1K-10K)</option>
+            <option value="Micro (10K-100K)">Micro (10K-100K)</option>
+            <option value="Mid-tier (100K-500K)">Mid-tier (100K-500K)</option>
+            <option value="Macro (500K-1M)">Macro (500K-1M)</option>
+            <option value="Mega (1M+)">Mega (1M+)</option>
+          </select>
+        </div>
+        <div>
+          <label for="kolTier">KOL Tier</label>
+          <select id="kolTier">
+            <option value="Any">Any</option>
+            <option value="KOL (Key Opinion Leader)">KOL</option>
+            <option value="KOC (Key Opinion Consumer)">KOC</option>
+            <option value="Celebrity">Celebrity</option>
+            <option value="Professional Athlete">Pro Athlete</option>
+          </select>
+        </div>
+        <div>
+          <label for="resultCount">Results</label>
+          <select id="resultCount">
+            <option value="5">Top 5</option>
+            <option value="10" selected>Top 10</option>
+            <option value="15">Top 15</option>
+            <option value="20">Top 20</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="instructions">Additional Requirements <span class="hint">(optional)</span></label>
+        <textarea id="instructions" placeholder="e.g., Focus on KOLs who have worked with competing brands, look for rising stars with high engagement rate, find KOLs who post about Nike Air Max..."></textarea>
+      </div>
+
+      <button class="btn-primary" id="searchBtn" onclick="searchKOLs()">
+        Search KOLs
+      </button>
+
+      <div class="shortcut-hint">
+        Press <kbd>Ctrl</kbd>+<kbd>Enter</kbd> to search
+      </div>
+    </div>
+
+    <div class="card output-panel" id="outputPanel">
+      <div class="output-header">
+        <div class="card-title">KOL Research Results</div>
+        <button class="btn-copy" id="copyBtn" onclick="copyToClipboard()">Copy</button>
+      </div>
+
+      <div class="output-area" id="outputArea"></div>
+
+      <div class="output-footer">
+        <span id="resultMeta"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const WEBHOOK_URL = 'https://n8n.srv923061.hstgr.cloud/webhook/45a57c13-d591-42a0-9adf-3bb27eb3d6fc';
+
+    // Restore saved preferences
+    (function loadPreferences() {
+      const saved = localStorage.getItem('nike_kol_prefs');
+      if (!saved) return;
+      try {
+        const prefs = JSON.parse(saved);
+        if (prefs.platform) document.getElementById('platform').value = prefs.platform;
+        if (prefs.category) document.getElementById('category').value = prefs.category;
+        if (prefs.followerRange) document.getElementById('followerRange').value = prefs.followerRange;
+        if (prefs.kolTier) document.getElementById('kolTier').value = prefs.kolTier;
+        if (prefs.resultCount) document.getElementById('resultCount').value = prefs.resultCount;
+      } catch {}
+    })();
+
+    function savePreferences() {
+      const prefs = {
+        platform: document.getElementById('platform').value,
+        category: document.getElementById('category').value,
+        followerRange: document.getElementById('followerRange').value,
+        kolTier: document.getElementById('kolTier').value,
+        resultCount: document.getElementById('resultCount').value
+      };
+      localStorage.setItem('nike_kol_prefs', JSON.stringify(prefs));
+    }
+
+    function buildPrompt(query, platform, category, followerRange, kolTier, resultCount, instructions) {
+      let prompt = `Search for "${query}" KOLs/influencers in China on ${platform} for Nike ${category}. `;
+      if (followerRange !== 'Any') prompt += `Follower range: ${followerRange}. `;
+      if (kolTier !== 'Any') prompt += `Tier: ${kolTier}. `;
+      prompt += `Return ${resultCount} KOLs. `;
+      prompt += `For each KOL include: Name, Platform handle, Followers, Engagement rate, Niche, Nike fit, Profile URL. `;
+      if (instructions) prompt += instructions;
+      return prompt;
+    }
+
+    function extractContent(data) {
+      if (typeof data === 'string') return data;
+      if (data.output) return typeof data.output === 'string' ? data.output : JSON.stringify(data.output, null, 2);
+      if (data.message) return data.message;
+      if (data.text) return data.text;
+      if (data.response) return data.response;
+      if (data.result) return data.result;
+      if (data.content) return data.content;
+      if (Array.isArray(data) && data.length > 0) return extractContent(data[0]);
+      return JSON.stringify(data, null, 2);
+    }
+
+    function setPipelineActive(stepNum) {
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById('step' + i).classList.toggle('active', i <= stepNum);
+      }
+    }
+
+    function setLoading(isLoading) {
+      const btn = document.getElementById('searchBtn');
+      const outputPanel = document.getElementById('outputPanel');
+      const outputArea = document.getElementById('outputArea');
+
+      btn.disabled = isLoading;
+
+      if (isLoading) {
+        btn.innerHTML = '<span class="spinner"></span> Searching...';
+        outputPanel.classList.add('visible');
+        outputArea.className = 'output-area';
+        outputArea.innerHTML = `
+          <div class="loading-container">
+            <div class="spinner"></div>
+            <div class="loading-title">Discovering KOLs in China...</div>
+            <div class="loading-subtitle">This may take 1-2 minutes as the AI agent researches multiple sources</div>
+            <div class="loading-steps">
+              <div class="loading-step active"><span class="dot"></span> Triggering AI Agent via webhook</div>
+              <div class="loading-step active"><span class="dot"></span> MCP Client connecting to MCP Server</div>
+              <div class="loading-step active"><span class="dot"></span> Apify scraping KOL profiles</div>
+              <div class="loading-step active"><span class="dot"></span> Firecrawl pulling detailed info</div>
+              <div class="loading-step"><span class="dot"></span> Compiling research report</div>
+            </div>
+          </div>`;
+        document.getElementById('copyBtn').style.display = 'none';
+        document.getElementById('resultMeta').textContent = '';
+        setPipelineActive(4);
+      } else {
+        btn.innerHTML = 'Search KOLs';
+        setPipelineActive(0);
+      }
+    }
+
+    function displayOutput(content) {
+      const outputPanel = document.getElementById('outputPanel');
+      const outputArea = document.getElementById('outputArea');
+      const copyBtn = document.getElementById('copyBtn');
+
+      outputPanel.classList.add('visible');
+      outputArea.className = 'output-area fade-in';
+      outputArea.textContent = content;
+
+      copyBtn.style.display = 'inline-block';
+      copyBtn.textContent = 'Copy';
+      copyBtn.classList.remove('copied');
+
+      const timestamp = new Date().toLocaleString();
+      document.getElementById('resultMeta').textContent = `Generated: ${timestamp}`;
+    }
+
+    function showError(message) {
+      const outputPanel = document.getElementById('outputPanel');
+      const outputArea = document.getElementById('outputArea');
+
+      outputPanel.classList.add('visible');
+      outputArea.className = 'output-area error fade-in';
+      outputArea.textContent = message;
+      document.getElementById('copyBtn').style.display = 'none';
+      document.getElementById('resultMeta').textContent = '';
+    }
+
+    async function searchKOLs() {
+      const query = document.getElementById('kolQuery').value.trim();
+      const platform = document.getElementById('platform').value;
+      const category = document.getElementById('category').value;
+      const followerRange = document.getElementById('followerRange').value;
+      const kolTier = document.getElementById('kolTier').value;
+      const resultCount = document.getElementById('resultCount').value;
+      const instructions = document.getElementById('instructions').value.trim();
+
+      if (!query) {
+        document.getElementById('kolQuery').focus();
+        showError('Please enter a KOL name or category to search.');
+        return;
+      }
+
+      savePreferences();
+      setLoading(true);
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 300000);
+
+      try {
+        const message = buildPrompt(query, platform, category, followerRange, kolTier, resultCount, instructions);
+
+        const response = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message,
+            query,
+            platform,
+            category,
+            followerRange,
+            kolTier,
+            resultCount,
+            instructions
+          }),
+          signal: controller.signal
+        });
+
+        clearTimeout(timeout);
+
+        if (!response.ok) {
+          throw new Error(`Server responded with status ${response.status}. Make sure the n8n workflow is active.`);
+        }
+
+        let content;
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const data = await response.json();
+          content = extractContent(data);
+        } else {
+          content = await response.text();
+        }
+
+        if (!content || content.trim() === '' || content === '{}' || content === '[]') {
+          showError('The AI agent returned an empty response. The workflow may still be processing. Please try again.');
+          return;
+        }
+
+        displayOutput(content);
+      } catch (err) {
+        clearTimeout(timeout);
+        if (err.name === 'AbortError') {
+          showError('Request timed out. The AI agent may need more time.\n\nTips:\n- Check that the n8n workflows are active\n- Try a more specific search query');
+        } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+          showError('Network error. Possible causes:\n\n1. CORS: Add Access-Control-Allow-Origin header in n8n webhook response headers\n2. Workflow inactive: Activate both NikeMCPClient and NikeMCPServer workflows\n3. Connectivity: Check your network connection');
+        } else {
+          showError(err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    async function copyToClipboard() {
+      const text = document.getElementById('outputArea').textContent;
+      if (!text) return;
+
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+
+    // Keyboard shortcut: Ctrl+Enter or Cmd+Enter
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        if (!document.getElementById('searchBtn').disabled) {
+          searchKOLs();
+        }
+      }
+    });
+  </script>
+</body>
+</html>

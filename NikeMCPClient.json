@@ -1,0 +1,144 @@
+{
+  "name": "NikeMCPClient",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "45a57c13-d591-42a0-9adf-3bb27eb3d6fc",
+        "responseMode": "lastNode",
+        "options": {
+          "allowedOrigins": "*",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Accept"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        704,
+        320
+      ],
+      "id": "59ddd576-e715-4eea-b62f-52d615b26c7a",
+      "name": "Webhook",
+      "webhookId": "45a57c13-d591-42a0-9adf-3bb27eb3d6fc"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.message }}",
+        "options": {
+          "systemMessage": "You are a Nike China KOL research assistant. RULES:\n1) NEVER ask clarifying questions. Execute immediately with the information provided.\n2) Try each tool ONCE. If a tool fails, skip it and move on.\n3) If all tools fail, immediately produce a KOL report using your training knowledge.\n4) You MUST respond within 30 seconds. Speed is critical.\n5) Always return a structured report - never return questions or options.\n6) For each KOL include: Name (Chinese + English), Platform, Handle, Followers, Engagement Rate, Niche, Why they fit Nike, Profile URL."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        912,
+        320
+      ],
+      "id": "b3392354-7d2f-4ff9-a2b5-2c59c59a6463",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://n8n.srv923061.hstgr.cloud/mcp/67712673-9552-4041-a8e2-32ed2f38e11a",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        1168,
+        496
+      ],
+      "id": "772abdd5-9600-4040-8325-70ee78cedd81",
+      "name": "MCP Client"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        864,
+        496
+      ],
+      "id": "25ec91fa-88bf-413f-8c65-219d610e02e8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Hu8cP5b0Yhomo7VM",
+          "name": "OpenAi API Key (Alfred Account)"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "fbd8f485-54a9-42d3-b616-c553bc343400",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dd9d815cb100cab73a9cd63cc3f30fd090e73e9edbdc09a51a025bdf1bf015af"
+  },
+  "id": "kcUqkERIUexZWeDL",
+  "tags": []
+}

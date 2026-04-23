@@ -1,0 +1,103 @@
+{
+  "name": "NikeMCPServer",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "67712673-9552-4041-a8e2-32ed2f38e11a"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        -112
+      ],
+      "id": "604dd215-1ade-47e0-9761-1f198bf5f08d",
+      "name": "MCP Server Trigger",
+      "webhookId": "67712673-9552-4041-a8e2-32ed2f38e11a"
+    },
+    {
+      "parameters": {
+        "operation": "scrape",
+        "parsers": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Parsers', ``, 'string') }}",
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawlTool",
+      "typeVersion": 1,
+      "position": [
+        0,
+        96
+      ],
+      "id": "91d9db81-a591-45cb-8f9f-089bd6d03abe",
+      "name": "/scrape in Firecrawl",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "0ccNJwdBF1Bd2U9F",
+          "name": "Firecrawl account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "actorId": {
+          "__rl": true,
+          "value": "3ox4R101TgZz67sLr",
+          "mode": "list",
+          "cachedResultName": "RAG Web Browser (apify/rag-web-browser)",
+          "cachedResultUrl": "https://console.apify.com/actors/3ox4R101TgZz67sLr/input"
+        },
+        "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', 'The search query to look up KOLs or influencers in China', 'string') }}"
+      },
+      "type": "@apify/n8n-nodes-apify.apifyTool",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        96
+      ],
+      "id": "55d7f05d-f002-40f2-80cf-2920fb876ef3",
+      "name": "Run an Actor in Apify",
+      "credentials": {
+        "apifyApi": {
+          "id": "c5iNTUewKUCydx1y",
+          "name": "Apify account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "/scrape in Firecrawl": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run an Actor in Apify": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "dd137eea-961e-48a0-9adb-b9b0960c5039",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dd9d815cb100cab73a9cd63cc3f30fd090e73e9edbdc09a51a025bdf1bf015af"
+  },
+  "id": "wTXqVaGsyVMNrTKY",
+  "tags": []
+}
