@@ -539,6 +539,7 @@
 
   <script>
     const WEBHOOK_URL = 'https://n8n.srv923061.hstgr.cloud/webhook/45a57c13-d591-42a0-9adf-3bb27eb3d6fc';
+    const RESULT_URL = 'https://n8n.srv923061.hstgr.cloud/webhook/45a57c13-result';
 
     // Restore saved preferences
     (function loadPreferences() {
@@ -654,6 +655,19 @@
       document.getElementById('resultMeta').textContent = '';
     }
 
+    async function pollForResult(executionId) {
+      for (let i = 0; i < 60; i++) {
+        await new Promise(r => setTimeout(r, 5000));
+        try {
+          const res = await fetch(`${RESULT_URL}?id=${executionId}`);
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (data.status === 'done' && data.output) return data.output;
+        } catch { /* keep polling */ }
+      }
+      throw new Error('Timed out after 5 minutes. Check n8n Executions tab for results.');
+    }
+
     async function searchKOLs() {
       const query = document.getElementById('kolQuery').value.trim();
       const platform = document.getElementById('platform').value;
@@ -672,56 +686,42 @@
       savePreferences();
       setLoading(true);
 
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 300000);
-
       try {
         const message = buildPrompt(query, platform, category, followerRange, kolTier, resultCount, instructions);
 
         const response = await fetch(WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message,
-            query,
-            platform,
-            category,
-            followerRange,
-            kolTier,
-            resultCount,
-            instructions
-          }),
-          signal: controller.signal
+          body: JSON.stringify({ message, query, platform, category, followerRange, kolTier, resultCount, instructions })
         });
-
-        clearTimeout(timeout);
 
         if (!response.ok) {
           throw new Error(`Server responded with status ${response.status}. Make sure the n8n workflow is active.`);
         }
 
-        const text = await response.text();
+        let triggerData;
+        try {
+          const text = await response.text();
+          triggerData = text ? JSON.parse(text) : {};
+        } catch {
+          triggerData = {};
+        }
 
-        if (!text || text.trim() === '') {
-          showError('Empty response — the AI agent is still processing (nginx timed out at 60s).\n\nCheck the n8n Executions tab for the result.\n\nTo fix permanently: increase proxy_read_timeout in your nginx config to 300s.');
+        if (Array.isArray(triggerData)) triggerData = triggerData[0] || {};
+        const executionId = triggerData.executionId;
+
+        if (!executionId) {
+          const content = extractContent(triggerData);
+          if (content && content !== '{}') { displayOutput(content); return; }
+          showError('No execution ID received. Make sure the n8n workflow is active.');
           return;
         }
 
-        let content;
-        try {
-          const data = JSON.parse(text);
-          content = extractContent(data);
-        } catch {
-          content = text;
-        }
-
-        displayOutput(content);
+        const result = await pollForResult(executionId);
+        displayOutput(result);
       } catch (err) {
-        clearTimeout(timeout);
-        if (err.name === 'AbortError') {
-          showError('Request timed out. The AI agent may need more time.\n\nTips:\n- Check that the n8n workflows are active\n- Try a more specific search query');
-        } else if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-          showError('Network error. Possible causes:\n\n1. CORS: Add Access-Control-Allow-Origin header in n8n webhook response headers\n2. Workflow inactive: Activate both NikeMCPClient and NikeMCPServer workflows\n3. Connectivity: Check your network connection');
+        if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+          showError('Network error. Check that the n8n workflows are active and CORS is configured.');
         } else {
           showError(err.message);
         }
