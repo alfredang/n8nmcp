@@ -700,18 +700,19 @@
           throw new Error(`Server responded with status ${response.status}. Make sure the n8n workflow is active.`);
         }
 
-        let content;
-        const contentType = response.headers.get('content-type') || '';
-        if (contentType.includes('application/json')) {
-          const data = await response.json();
-          content = extractContent(data);
-        } else {
-          content = await response.text();
+        const text = await response.text();
+
+        if (!text || text.trim() === '') {
+          showError('Empty response — the AI agent is still processing (nginx timed out at 60s).\n\nCheck the n8n Executions tab for the result.\n\nTo fix permanently: increase proxy_read_timeout in your nginx config to 300s.');
+          return;
         }
 
-        if (!content || content.trim() === '' || content === '{}' || content === '[]') {
-          showError('The AI agent returned an empty response. The workflow may still be processing. Please try again.');
-          return;
+        let content;
+        try {
+          const data = JSON.parse(text);
+          content = extractContent(data);
+        } catch {
+          content = text;
         }
 
         displayOutput(content);
