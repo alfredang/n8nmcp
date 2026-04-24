@@ -38,19 +38,17 @@
     },
     {
       "parameters": {
-        "name": "Search_the_web_using_Apify",
-        "description": "Search the web for KOLs, influencers, and public information using Apify RAG Web Browser. Returns web search results.",
-        "method": "POST",
-        "url": "https://api.apify.com/v2/acts/3ox4R101TgZz67sLr/run-sync-get-dataset-items",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "apifyApi",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ /*n8n-auto-generated-fromAI-override*/ '{\"query\": \"' + $fromAI('query', 'The search query to find KOLs and influencers', 'string') + '\", \"maxResults\": 5}' }}",
-        "options": {}
+        "actorId": {
+          "__rl": true,
+          "value": "3ox4R101TgZz67sLr",
+          "mode": "list",
+          "cachedResultName": "RAG Web Browser (apify/rag-web-browser)",
+          "cachedResultUrl": "https://console.apify.com/actors/3ox4R101TgZz67sLr/input"
+        },
+        "actorInput": "{\"query\": \"{{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', 'Search query for KOLs', 'string') }}\", \"maxResults\": 5}"
       },
-      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
-      "typeVersion": 1.1,
+      "type": "@apify/n8n-nodes-apify.apifyTool",
+      "typeVersion": 1,
       "position": [
         -176,
         96
