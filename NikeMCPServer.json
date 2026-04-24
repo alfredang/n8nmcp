@@ -54,7 +54,7 @@
         96
       ],
       "id": "55d7f05d-f002-40f2-80cf-2920fb876ef3",
-      "name": "Run an Actor in Apify",
+      "name": "Search the web using Apify",
       "credentials": {
         "apifyApi": {
           "id": "c5iNTUewKUCydx1y",
@@ -76,7 +76,7 @@
         ]
       ]
     },
-    "Run an Actor in Apify": {
+    "Search the web using Apify": {
       "ai_tool": [
         [
           {
