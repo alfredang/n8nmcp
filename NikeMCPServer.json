@@ -45,7 +45,7 @@
           "cachedResultName": "RAG Web Browser (apify/rag-web-browser)",
           "cachedResultUrl": "https://console.apify.com/actors/3ox4R101TgZz67sLr/input"
         },
-        "actorInput": "={{ /*n8n-auto-generated-fromAI-override*/ '{\"query\": \"' + $fromAI('searchQuery', 'The search query to find KOLs and influencers in China for Nike', 'string').replace(/\"/g, '') + '\", \"maxResults\": 5}' }}"
+        "actorInput": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('actorInput', 'JSON input for Apify. MUST be a JSON string with a query field like this: {\"query\": \"basketball KOL influencer China\", \"maxResults\": 5}', 'string') }}"
       },
       "type": "@apify/n8n-nodes-apify.apifyTool",
       "typeVersion": 1,
